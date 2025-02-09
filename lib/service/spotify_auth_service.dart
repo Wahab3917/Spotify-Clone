@@ -26,7 +26,7 @@ class SpotifyAuthService {
         'user-read-currently-playing',
         'user-read-email',
         'user-read-recently-played',
-        'user-library-read'
+        'user-library-read',
       ]
     );
     

@@ -152,4 +152,29 @@ class SpotifyData {
     }
   }
 
+  /// Plays a specific track by sending its URI.
+  Future<void> playTrack(String trackId) async {
+    final url = Uri.parse('https://api.spotify.com/v1/me/player/play');
+    final body = json.encode({
+      "uris": ["spotify:track:$trackId"]
+    });
+
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $Access_Token',
+      },
+      body: body,
+    );
+
+    if (response.statusCode == 204) {
+      print("Track playback started successfully.");
+    } else {
+      print("Failed to start track playback. Status: ${response.statusCode}");
+      print("Response: ${response.body}");
+      throw Exception("Failed to start track playback");
+    }
+  }
+
 }

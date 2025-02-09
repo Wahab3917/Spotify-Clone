@@ -11,6 +11,21 @@ class Playlist extends StatelessWidget {
     return await spotifyData.fetchPlaylistTracks(playlist['id']);
   }
 
+  // Function to play a specific track
+  void _playTrack(BuildContext context, String trackId) async {
+    try {
+      final spotifyData = SpotifyData();
+      await spotifyData.playTrack(trackId);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Track playback started successfully')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error starting track playback: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     String imageUrl = '';
@@ -68,9 +83,9 @@ class Playlist extends StatelessWidget {
                 fontSize: 16,
               ),
             ),
-
+            
             const SizedBox(height: 32),
-            // Fetch and display tracks without duration
+            // Display tracks using FutureBuilder and make each track tappable
             Expanded(
               child: FutureBuilder<List<Map<String, dynamic>>>(
                 future: _getPlaylistTracks(),
@@ -107,25 +122,34 @@ class Playlist extends StatelessWidget {
                               .map((a) => a['name'])
                               .join(', ')
                           : '';
-                      return ListTile(
-                        leading: trackData != null &&
-                                trackData['album'] != null &&
-                                trackData['album']['images'] != null &&
-                                (trackData['album']['images'] as List).isNotEmpty
-                            ? Image.network(
-                                trackData['album']['images'][0]['url'],
-                                width: 50,
-                                height: 50,
-                                fit: BoxFit.cover,
-                              )
-                            : const Icon(Icons.music_note, color: Colors.white),
-                        title: Text(
-                          trackName,
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                        subtitle: Text(
-                          artists,
-                          style: const TextStyle(color: Colors.white70),
+                      final trackId = trackData != null ? trackData['id'] : '';
+
+                      return InkWell(
+                        onTap: () {
+                          if (trackId.isNotEmpty) {
+                            _playTrack(context, trackId);
+                          }
+                        },
+                        child: ListTile(
+                          leading: trackData != null &&
+                                  trackData['album'] != null &&
+                                  trackData['album']['images'] != null &&
+                                  (trackData['album']['images'] as List).isNotEmpty
+                              ? Image.network(
+                                  trackData['album']['images'][0]['url'],
+                                  width: 50,
+                                  height: 50,
+                                  fit: BoxFit.cover,
+                                )
+                              : const Icon(Icons.music_note, color: Colors.white),
+                          title: Text(
+                            trackName,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                          subtitle: Text(
+                            artists,
+                            style: const TextStyle(color: Colors.white70),
+                          ),
                         ),
                       );
                     },
@@ -139,3 +163,4 @@ class Playlist extends StatelessWidget {
     );
   }
 }
+
