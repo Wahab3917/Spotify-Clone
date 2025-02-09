@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:spotify/utils/colors.dart';
-import 'package:spotify/widgets/header.dart';
-import 'package:spotify/widgets/recently_played.dart';
-import 'package:spotify/widgets/made_for_you.dart';
-import 'package:spotify/widgets/my_playlists.dart';
+import 'package:spotify/screens/home_content.dart';
+import 'package:spotify/screens/search.dart';
+import 'package:spotify/screens/library.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -13,35 +12,34 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  int _selectedIndex = 0;
+
+  final List<Widget> _pages = const [
+    HomeContent(),
+    Search(),
+    Library(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: themeColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Header(),
-                SizedBox(height: 24),
-                RecentlyPlayed(),
-                SizedBox(height: 32),
-                MadeForYou(),
-                SizedBox(height: 32),
-                MyPlaylists(),
-
-
-              ],
-            ),
-          ),
-        ),
+      // Display the current page using an IndexedStack to preserve state.
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
+        backgroundColor: themeColor,
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.grey,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -53,7 +51,7 @@ class _HomeState extends State<Home> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.library_music),
-            label: 'Your Library',  
+            label: 'Your Library',
           ),
         ],
       ),

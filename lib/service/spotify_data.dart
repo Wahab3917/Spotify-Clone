@@ -4,6 +4,24 @@ import '../utils/strings.dart';
 
 class SpotifyData {
 
+  /// Fetches the current user's profile.
+  Future<Map<String, dynamic>> fetchUserProfile() async {
+    final response = await http.get(
+      Uri.parse('https://api.spotify.com/v1/me'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $Access_Token',
+      },
+    );
+    if (response.statusCode == 200) {
+      return json.decode(response.body) as Map<String, dynamic>;
+    } else {
+      print('Failed to fetch user profile. Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      throw Exception('Failed to fetch user profile');
+    }
+  }
+
   /// Fetches the recently played tracks.
   Future<List<Map<String, dynamic>>> fetchRecentlyPlayed() async {
     try {
