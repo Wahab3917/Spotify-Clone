@@ -3,10 +3,10 @@ import 'package:spotify/utils/colors.dart';
 
 class Signup extends StatefulWidget {
   @override
-  _SignupPageState createState() => _SignupPageState();
+  _SignupScreenState createState() => _SignupScreenState();
 }
 
-class _SignupPageState extends State<Signup> {
+class _SignupScreenState extends State<Signup> {
   Color _loginTextColor = Colors.white;
   int _hoveredButtonIndex = -1;
 

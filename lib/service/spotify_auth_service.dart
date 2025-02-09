@@ -33,6 +33,9 @@ class SpotifyAuthService {
     Access_Token = accessToken.accessToken ?? '';
     Refresh_Token = accessToken.refreshToken ?? '';
 
+    print('ACCESS TOKEN: $Access_Token');
+    print('REFRESH TOKEN: $Refresh_Token');
+
   }
 }
 

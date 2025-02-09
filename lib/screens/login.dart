@@ -4,10 +4,10 @@ import 'package:spotify/service/spotify_auth_service.dart';
 
 class Login extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginPageState extends State<Login> {
+class _LoginScreenState extends State<Login> {
   bool _obscureText = true;
   Color _forgotTextColor = Colors.white;
   Color _signupTextColor = Colors.white;
