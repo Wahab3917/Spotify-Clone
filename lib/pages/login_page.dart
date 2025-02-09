@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spotify/utils/colors.dart';
+import 'package:spotify/service/spotify_auth_service.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -11,11 +12,32 @@ class _LoginPageState extends State<Login> {
   Color _forgotTextColor = Colors.white;
   Color _signupTextColor = Colors.white;
   int _hoveredButtonIndex = -1;
+  bool _isLoading = false;
    
   void _togglePasswordView() {
     setState(() {
       _obscureText = !_obscureText;
     });
+  }
+
+  // Spotify Authentication
+  Future<void> _authenticateSpotify() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      await SpotifyAuthService.remoteService();
+      Navigator.pushReplacementNamed(context, '/home');
+    } catch (e) {
+      print('Spotify authentication failed: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Authentication failed. Please try again.')),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -197,10 +219,10 @@ class _LoginPageState extends State<Login> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
-                              // Button Functionality
+                              _isLoading ? null : _authenticateSpotify();
                             },
                             child: Text(
-                              'Log In',
+                              _isLoading ? 'Logging in...' : 'Log In',
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.black,
