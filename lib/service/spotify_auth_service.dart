@@ -19,9 +19,18 @@ class SpotifyAuthService {
       clientId: CLIENT_ID,
 
       customParams: {'show_dialog': 'true'},
-      scopes: ['user-read-private', 'user-read-playback-state', 'user-modify-playback-state', 'user-read-currently-playing', 'user-read-email']
+      scopes: [
+        'user-read-private',
+        'user-read-playback-state',
+        'user-modify-playback-state',
+        'user-read-currently-playing',
+        'user-read-email',
+        'user-read-recently-played',
+        'user-library-read'
+      ]
     );
     
+
     var authCode = authResp.code;
 
     accessToken = await client.requestAccessToken(
