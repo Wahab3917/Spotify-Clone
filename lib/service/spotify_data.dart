@@ -120,4 +120,36 @@ class SpotifyData {
     }
   }
 
+  /// Fetches tracks from the given playlist.
+  Future<List<Map<String, dynamic>>> fetchPlaylistTracks(String playlistId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('https://api.spotify.com/v1/playlists/$playlistId/tracks?limit=50'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $Access_Token',
+        },
+      );
+
+      print("HTTP response status (playlist tracks): ${response.statusCode}");
+      print("HTTP response body (playlist tracks): ${response.body}");
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        // The endpoint returns a JSON object with an 'items' array; each item has a 'track' key.
+        final List<Map<String, dynamic>> tracks =
+            List<Map<String, dynamic>>.from(data['items']);
+        print('Tracks fetched successfully: ${tracks.length} items');
+        return tracks;
+      } else {
+        print('Failed to fetch playlist tracks. Status code: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        throw Exception('Failed to fetch playlist tracks');
+      }
+    } catch (e) {
+      print('Error fetching playlist tracks: $e');
+      throw Exception('Error fetching playlist tracks: $e');
+    }
+  }
+
 }

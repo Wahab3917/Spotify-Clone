@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../service/spotify_data.dart';
+import '../screens/playlist.dart';
 
 class MyPlaylists extends StatelessWidget {
   const MyPlaylists({Key? key}) : super(key: key);
@@ -65,40 +66,51 @@ class MyPlaylists extends StatelessWidget {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 final playlist = snapshot.data![index];
-                return Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey[900],
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Row(
-                    children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(4),
-                          bottomLeft: Radius.circular(4),
-                        ),
-                        child: Image.network(
-                          playlist['images'][0]['url'],
-                          width: 80,
-                          height: 80,
-                          fit: BoxFit.cover,
-                        ),
+                return InkWell(
+                  onTap: () {
+                    // Navigate to the PlaylistDetails page, passing the playlist data.
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Playlist(playlist: playlist),
                       ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            playlist['name'],
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[900],
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4),
+                            bottomLeft: Radius.circular(4),
+                          ),
+                          child: Image.network(
+                            playlist['images'][0]['url'],
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.cover,
                           ),
                         ),
-                      ),
-                    ],
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              playlist['name'],
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
